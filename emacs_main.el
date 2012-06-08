@@ -1117,56 +1117,20 @@ With argument, do this that many times."
               (not (string-equal (downcase (getenv "NODESK")) "true"))
               )
           (progn
-            (load-library "desktop")
-            (setq-default desktop-load-locked-desktop 't)
-            (setq-default desktop-missing-file-warning 't)
-            (setq-default desktop-enable 't)
-            (setq-default desktop-minor-mode-table '((auto-fill-function auto-fill-mode) (vc-mode nil) (ecb-minor-mode nil) (semantic-show-unmatched-syntax-mode nil) (semantic-stickyfunc-mode nil) (senator-minor-mode nil) (semantic-idle-scheduler-mode nil)))
             ;; Desktop Menu
             (autoload 'desktop-menu "desktop-menu" "Desktop Menu" t)
             (global-set-key (kbd "<pause>") 'desktop-menu)
+            (setq-default desktop-load-locked-desktop 't)
+            (setq-default desktop-missing-file-warning 't)
 
-            ;; Remove the auto-load of the desktop if desktop menu set up
-            (if (file-exists-p (expand-file-name "~/.emacs.desktops"))
-                (progn
-                  (remove-hook 'after-init-hook
-                               '(lambda ()
-                                  (when desktop-enable
-                                    (desktop-load-default)
-                                    (desktop-read))))
-;; This bit automatically runs the desktop-menu
-;;                   (add-hook 'after-init-hook
-;;                             '(lambda ()
-;;                                (when desktop-enable
-;;                                  (desktop-load-default)
-;;                                  (desktop-menu))))
-                  (eval-after-load "desktop-menu"
-                    '(defun desktop-menu-load (filename)
-                       "Load desktop of FILENAME."
-                       (interactive "F")
-                       (let
-                           ((desktop-dirname (file-name-directory filename))
-                            (desktop-basefilename (file-name-nondirectory filename)))
-                         (desktop-read))
-                       (setq-default desktop-basefilename (file-name-nondirectory filename))
-                       (setq-default desktop-base-file-name (file-name-nondirectory filename))
-                       ))
-                  )
-              )
             (add-hook 'desktop-save-hook
                       '(lambda ()
                          (desktop-truncate search-ring 2)
                          (desktop-truncate regexp-search-ring 2)))
+
             (if (symbol-value 'rnc_desktop_autosave)
-                (progn
-                  ;; Timer - save the desktop every hour in case of crashes
-                  (defun my-timer-action ()
-                    "Save the desktop and kill any desktop buffer"
-                    (progn (desktop-save (expand-file-name "~/"))
-                           (and (get-buffer "*desktop*")
-                                (kill-buffer (get-buffer "*desktop*")))
-                           ))
-                  (run-at-time "3600 sec" 3600 'my-timer-action)
+                (eval-after-load "desktop-menu"
+                  '(setq-default desktop-menu-autosave 3600)
                   )
               )
             )
