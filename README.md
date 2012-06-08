@@ -21,7 +21,7 @@ Setup
 + Modify the variable `rnc_emacs_home` to point to this repository.
 + Byte compile the General directory e.g.
 
-    emacs --no-site-file --no-init-file --batch --funcall batch-byte-compile `find <repo>/General -name "*.el"`
+    emacs --no-site-file --no-init-file --batch --funcall batch-byte-compile ``find <repo>/General -name "*.el"``
 
 + Byte compile the emacs_main.el file
 
