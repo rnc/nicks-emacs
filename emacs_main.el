@@ -222,14 +222,13 @@ Same as (system-name) up to the first '.'"
 
 ;; Active Matching Parens
 ;; Using mic-paren to provide additional facilities e.g. offscreen matching
-(if rnc_x_console
-    (progn (setq-default paren-dont-load-timer t)
-           (require 'mic-paren)
-           (paren-activate)
-           (setq-default paren-highlight-offscreen t)
-           (setq-default paren-ding-unmatched t)
-           (setq-default blink-matching-paren-distance 'nil)
-           (setq-default blink-matching-paren 'nil)))
+(require 'mic-paren)
+(paren-activate)
+(setq-default blink-matching-paren 'nil)
+(setq-default blink-matching-paren-distance 'nil)
+(setq-default paren-ding-unmatched t)
+(setq-default paren-dont-load-timer t)
+(setq-default paren-highlight-offscreen t)
 
 ;; Kill completion buffer when we exit the mini-buffer
 (add-hook 'minibuffer-exit-hook
@@ -505,8 +504,8 @@ With argument, do this that many times."
 ;;*************;;
 
 ;; Markdown
-(setq auto-mode-alist
-   (cons '("\\.md" . markdown-mode) auto-mode-alist))
+(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files." t)
+(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
 
 ;; AWK
 (autoload 'awk-mode "cc-mode" nil t)
@@ -789,9 +788,6 @@ With argument, do this that many times."
 
       (setq-default global-semantic-stickyfunc-mode nil)
       (setq-default global-senator-minor-mode nil)
-
-      ;; Must update this each time
-      (message "ECB Options set to %s" ecb-options-version)
       )
   )
 
