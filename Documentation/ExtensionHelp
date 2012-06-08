@@ -1,0 +1,100 @@
+
+
+Emacs Extensions
+================
+
+
+This describes the main extensions from using Nick Cross' emacs file. It is
+currently compatible with Emacs >=22. In no particular order:
+
+
+Internal variable configuration
+Autosave/Backup improvements
+Window layout recording
+
+HTML Helper Mode
+Ediff Mode
+ToDo Mode (M-x todo-mode)
+Align Mode (Select region, M-x align)
+Woman Mode (View Unix man pages)
+Calculator (M-x calculator)
+Live Mode - automatically reload files that have changed on disk (M-x live-mode)
+Resync Files - reload files that have changed on disk (C-c C-f)
+
+Delete/Backspace Fixes
+Scrolling Fixes
+        Meta-UpArrow/Meta-DownArrow will move one line at a time
+Buffer improvements
+        Menus
+        Substring switching (Ctrl-x Ctrl-z)
+        Buffer circulation (Ctrl- and Ctrl-. and Ctrl-> and Ctrl-<)
+        Auto-resizing
+Desktop Mode
+        Desktop allows saving your session and restoring it upon restarting
+        Emacs.  Pressing F12 shows the Desktop Menu. This allows multiple
+        desktops to be created. Pressing '?' in the Desktop Mode window shows
+        the keybinding options. Desktop loading can be disabled permanently in
+        the .emacs file or temporarily on the command line by
+                NODESK=true emacs
+Files
+        Font locking on all modes
+        Parentheses highlighting
+        Smart region selection via Ctrl-Tab
+
+
+Key Bindings
+============
+Some keys are only redefined if rnc_load_keys_reset is switched on.
+
+By default these are defined:
+C-c C-i         Indent Region
+M-<f21>         Undo
+M-<cursor-up>   Page up one line
+M-<cursor-down> Page down one line
+M-<f20>         Resync files
+C-<tab>         Intelligent Region Selection
+C-,             Circle Buffers Left
+C-.             Circle Buffers Right
+C->             Circle Buffers Right excluding buffers name '*something*'
+C-<             Circle Buffers Left excluding buffers name '*something*'
+C-c t           To-do Mode Buffer
+C-KeypardAdd    Calculator
+C-c C-p         Check Parentheses
+C-c C-d         Insert Data And Time
+C-Return        Complete Java Code At Point [Only if JDE mode enabled]
+M-Return        Quit
+C-c C-t         Toggle Printing Line Numbers
+F12             Display Desktop [If enabled]
+
+
+Old:
+C-Backspace     was undefined
+C-Delete        was backward-kill-word
+M-Backspace     was backward-kill-word
+M-Delete        was backward-kill-word
+Now:
+C-Backspace     Backward-kill-word
+C-Delete        Forward-kill-word
+M-Backspace     Backward-kill-line
+M-Delete        Forward-kill-line
+
+
+
+If rnc_load_keys_reset
+C-x C-z         Same as C-x b
+
+
+
+Emacs Hints
+===========
+
+Emacs is a relatively expensive process so try not start/stop/start it a lot.
+
+Use new frames for new windows (C-x 5 2) rather starting another Emacs process.
+
+If possible, the modes are defined as autoloads so there is no performance
+hit on Emacs.
+
+Type M-x describe-variable [RETURN] rnc_key_bindings [RETURN]
+to get a list of keys that have been mapped. Note that not all of these may
+have been mapped if rnc_load_keys_reset has not been set.

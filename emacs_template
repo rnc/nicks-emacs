@@ -1,0 +1,124 @@
+;; -*- Lisp -*-
+;;
+;; Emacs Initialisation File - copy this file to $HOME/.emacs
+;;
+;;
+;; For list of functions see Help Menu or have a look at
+;; emacs/emacs_main.el which is byte-compiled for speed.
+;; For keys, as above, or type:
+;;     M-x 'describe-variable' 'rnc_key_bindings'
+;;
+;;
+;; Initial Setup
+;;
+;; Debugging
+;;(setq-default debug-on-error t)
+;; Don't load default library
+(setq-default inhibit-default-init t)
+;; Get rid of start-up messages
+(setq inhibit-startup-echo-area-message (user-login-name))
+(setq inhibit-startup-message 'true)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                            ;;
+;; Change this path to the correct value.                     ;;
+;;                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Set this variable to the install location e.g.
+;; "N:\emacs" or "/usr/users/rnc/emacs"
+(defconst rnc_emacs_home (concat "/home/rnc/emacs"
+                                 (char-to-string directory-sep-char))
+  "Root directory path to where emacs customisation is stored.")
+
+
+
+;; Change these to false/true (nil/t) below if you want the specified sections
+;; to load. Without '*' as the first character of the docstring they are not
+;; editable by set-variable inside emacs - this doesn't matter as they are
+;; only used on startup.
+(defvar rnc_load_colours 't
+  "Specifies loading of fontified buffers [default is true]")
+(defvar rnc_desktop_enable 't
+  "Activates desktop loading/saving. Note - desktop loading can be temporarily switched off by setting the environment variable NODESK to true. [default is true]")
+(defvar rnc_desktop_autosave 'nil
+  "Wil autosave the desktop every hour [default is false]")
+(defvar rnc_load_autosave_config 'nil
+  "Sets saving autosave files to directory autosave in home directory [default is false]")
+(defvar rnc_disable_ecb_load 't
+  "Setting this will disable ECB (Emacs Code Browser) being loaded [default is true]")
+(defvar rnc_load_keys_reset 'nil
+  "Specifies rnc's swap of exit keys to a more sane layout. [default is false]")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                            ;;
+;; Set path and load byte-compiled main file.                 ;;
+;;                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(if (< emacs-major-version 21)
+    (x-popup-dialog t '("Warning - Emacs version must be 21 or above"
+                        ("Ok" . nil)))
+  )
+
+(let ((packagehome (concat rnc_emacs_home "Packages"
+                           (char-to-string directory-sep-char))))
+
+  ;; Do the info path settings as well
+  (setq Info-default-directory-list (cons packagehome Info-default-directory-list))
+
+  ;; For Emacs < v23.0 supply my patch files
+  (if (not (> emacs-major-version 22))
+      (progn
+        (setq load-path (cons (concat packagehome
+                                      "ps-print"
+                                      (char-to-string directory-sep-char)
+                                      "lisp"
+                                      (char-to-string directory-sep-char)
+                                      "ps-print") load-path))
+        (setq load-path (cons (concat packagehome "eieio")    load-path))
+        (setq load-path (cons (concat packagehome "elib")     load-path))
+        (setq load-path (cons (concat packagehome "semantic") load-path))
+        (setq load-path (cons (concat packagehome "speedbar") load-path))
+        (setq load-path (cons (concat packagehome "cc-mode")  load-path))
+        (setq load-path (cons (concat packagehome "cedet")    load-path))
+        )
+    )
+  ;; For Emacs < v22.3 supply my patch files
+  (if (and (= emacs-major-version 22)
+             (< emacs-minor-version 3))
+      ;; Use an updated pcvs from Emacs CVS repository.
+      (setq load-path (cons (concat packagehome "pcvs") load-path))
+    )
+
+  )
+
+(setq load-path (cons (concat rnc_emacs_home "General") load-path))
+
+(load (concat rnc_emacs_home "emacs_main"))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                            ;;
+;; End of my customisations. Do user level below here.        ;;
+;;                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;
+;; PRINTER
+;;
+;; Example printer setup:
+;; (setq-default pr-ps-printer-alist '((HPPrinter "lpr" nil "-P" "HP_Printer")))
+;; (setq-default ps-postscript-code-directory "/usr/share/emacs/23.3/etc")
+;; Set the printer name e.g.
+;; (setq-default pr-ps-name 'HPPrinter)
+;; (pr-update-menus t)
+;; END PRINTER
+;;
+
+
+;; Now custom saved variables...
