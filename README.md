@@ -13,15 +13,16 @@ Install via yum:
 + emacs-ecb
 + emacs-git
 
-*(If these are not installed then they must be installed manually and added to the load-path)*
+*(If these are not installed then their RPM contents must be installed manually and added to the load-path)*
 
 Setup
 -----
 + Copy the emacs_template to `$HOME/.emacs`
 + Modify the variable `rnc_emacs_home` to point to this repository.
++ Modify other configuration variables in it to your preference.
 + Byte compile the General directory e.g.
 
-	``emacs --no-site-file --no-init-file --batch --funcall batch-byte-compile `find <repo>/General -name "*.el"```
+	``emacs --no-site-file --no-init-file --batch --funcall batch-byte-compile `find <repo>/General -name "*.el"` ``
 
 + Byte compile the emacs_main.el file
 
@@ -47,4 +48,8 @@ Recommended Extras
 Useful external lisp packages are:
 + Groovy-mode
 + Egg (for GIT)
-+ Zenburn and Solarized color themes.
++ [Zenburn] and [Solarized] color themes.
+   *By default `rnc_load_colours` will use the zenburn theme if installed.*
+
+[Zenburn]:    https://github.com/bbatsov/zenburn-emacs
+[Solarized]:  https://github.com/sellout/emacs-color-theme-solarized
