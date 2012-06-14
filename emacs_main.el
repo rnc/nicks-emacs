@@ -889,7 +889,6 @@ With argument, do this that many times."
 
       (if (symbol-value 'rnc_load_colours)
           (progn
-
             ;; Enable color theme mode
             (require 'color-theme)
             (require 'color-theme-solarized 'nil 'noerror)
@@ -929,16 +928,13 @@ With argument, do this that many times."
             (set-face-bold-p 'font-lock-keyword-face t)
             (set-face-underline-p 'font-lock-constant-face t)
 
-            ;; (set-face-foreground 'font-lock-function-name-face "Magenta")
-            ;;(set-face-foreground 'font-lock-type-face "DarkSlateBlue")
-            ;;(set-face-foreground 'font-lock-comment-face "DarkGreen")
-            ;; (set-face-foreground 'font-lock-string-face "cornflower blue")
-            ;; (set-face-foreground 'font-lock-string-face "MediumBlue")
-
             (set-face-foreground 'paren-face-mismatch "White")
             (set-face-background 'paren-face-mismatch "Red")
             (set-face-foreground 'paren-face-no-match "Yellow")
             (set-face-background 'paren-face-no-match "Red")
+
+            (modify-face 'region "black" "khaki" nil nil nil nil nil nil)
+            (modify-face 'lazy-highlight "#f0dfaf" "#5f5f5f" nil nil nil nil t nil)
             )
         )
       ));; End of progn if window system
