@@ -138,9 +138,11 @@ Same as (system-name) up to the first '.'"
 (set-default-file-modes 493)
 ;; Only suggest binding for one second
 (setq-default suggest-key-bindings 1)
-;; Set frame title to machine-name : directory
-(setq frame-title-format "%b")
-  ;; Was using ... (list (machine-name) ":-  " 'default-directory))
+;; Set frame title format (See http://emacs-fu.blogspot.co.uk/2011/01/setting-frame-title.html)
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 ;; Amount of messages in log
 (setq-default message-log-max '200)
 ;; Wrap long lines
@@ -300,9 +302,8 @@ Same as (system-name) up to the first '.'"
 (setq msb-menu-cond
       (cons '((eq major-mode 'sh-mode) 560 "Shell Scripts (%d)")
             msb-menu-cond))
-;; Ensure that 20.4 runs MSB mode.
-(global-set-key (quote [C-down-mouse-1]) (quote msb))
 ;; Other options...
+(msb-mode)
 (setq-default msb-files-by-directory t)
 (setq-default msb-max-menu-items 25)
 (setq-default msb-max-file-menu-items 1)
@@ -674,7 +675,7 @@ With argument, do this that many times."
 ;; toggle-case-fold-search - toggles case sensitivity when searching;
 ;;                           default is 'insensitive'
 ;; printenv - print an environment variable
-(load "extraFunctions")
+(load "extraFunctions" nil t)
 (autoload 'dos-to-unix "extraFunctions" t)
 (autoload 'check-parentheses "extraFunctions" t)
 (global-set-key (kbd "C-c C-p") 'check-parentheses)
