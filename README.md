@@ -50,6 +50,10 @@ Useful external lisp packages are:
 + Egg (for GIT)
 + [Zenburn] and [Solarized] color themes.
    *By default `rnc_load_colours` will use the zenburn theme if installed.*
++ [Markdown] Mode.
++ [HTML Folding] Mode.
 
-[Zenburn]:    https://github.com/bbatsov/zenburn-emacs
-[Solarized]:  https://github.com/sellout/emacs-color-theme-solarized
+[Zenburn]:      https://github.com/bbatsov/zenburn-emacs
+[Solarized]:    https://github.com/sellout/emacs-color-theme-solarized
+[Markdown]:     http://jblevins.org/git/markdown-mode.git
+[HTML Folding]: https://github.com/ataka/html-fold
