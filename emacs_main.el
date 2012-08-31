@@ -412,6 +412,8 @@ Same as (system-name) up to the first '.'"
 (autoload 'cycle-buffer-backward "cycle-buffer" "Cycle backward." t)
 (autoload 'cycle-buffer-permissive "cycle-buffer" "Cycle forward allowing *buffers*." t)
 (autoload 'cycle-buffer-backward-backward-permissive "cycle-buffer" "Cycle backward allowing *buffers*." t)
+(global-set-key (kbd "<mouse-9>") 'cycle-buffer)
+(global-set-key (kbd "<mouse-8>") 'cycle-buffer-backward)
 (global-set-key (kbd "C-.") 'cycle-buffer)
 (global-set-key (kbd "C-,") 'cycle-buffer-backward)
 (global-set-key (kbd "C->") 'cycle-buffer-permissive)
