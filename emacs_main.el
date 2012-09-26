@@ -182,8 +182,12 @@ Same as (system-name) up to the first '.'"
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; Avoid visiting the same file in two buffers under different names.
 (setq-default find-file-existing-other-name t)
-;; Fill column for text modes
+;; Fill column for text modes (use fci-mode).
 (setq-default fill-column 80)
+(require 'fill-column-indicator)
+(setq-default fci-handle-truncate-lines 'nil)
+(setq-default fci-rule-color "dark orange")
+(setq-default fci-rule-use-dashes t)
 (if (and (string-equal window-system "x")
          (not (string-equal system-type "windows-nt"))
          )
@@ -577,6 +581,8 @@ With argument, do this that many times."
        (hs-minor-mode 1)
        (setq-default nxml-outline-child-indent 4)
        (setq-default nxml-child-indent 4)
+       ;; Used http://tech.groups.yahoo.com/group/emacs-nxml-mode/message/1399 to customise the grammar.
+       (setq-default rng-schema-locating-files (cons (concat rnc_emacs_home "Schemas/schemas.xml") rng-schema-locating-files))
        )))
 
 (add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
@@ -1127,11 +1133,7 @@ With argument, do this that many times."
                          (desktop-truncate search-ring 2)
                          (desktop-truncate regexp-search-ring 2)))
 
-            (if (symbol-value 'rnc_desktop_autosave)
-                (eval-after-load "desktop-menu"
-                  '(setq-default desktop-menu-autosave 3600)
-                  )
-              )
+            (setq-default desktop-menu-autosave 3600)
             )
         )
       )
