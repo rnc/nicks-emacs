@@ -556,6 +556,7 @@ With argument, do this that many times."
 (add-hook 'text-mode-hook 'turn-on-filladapt-mode)
 
 ;; HideShow Mode
+(require 'hideshow)
 (add-to-list 'hs-special-modes-alist
              '(nxml-mode
                "<!--\\|<[^/>]>\\|<[^/][^>]*[^/]>"
@@ -1018,6 +1019,8 @@ With argument, do this that many times."
 
 ;; Hook run on ObjC/Java/C/C++/IDL/Pike modes
 (defun my-c-mode-common-hook ()
+  ;; HideShow Mode
+  (hs-minor-mode)
   ;; Doc Mode
   (doc-mode)
   ;; Auto-newline
