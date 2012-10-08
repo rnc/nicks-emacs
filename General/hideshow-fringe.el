@@ -15,7 +15,7 @@
   :type 'face
   :group 'hideshow)
 (defface hs-face
-  '((t (:background "#ff8" :box t)))
+  '((t (:background "#ff8" :foreground "black" :box t)))
   "Face to hightlight the ... area of hidden regions"
   :group 'hideshow)
 (defun display-code-line-counts (ov)
@@ -24,7 +24,9 @@
            (marker-length (length marker-string))
            (display-string (format "(%d)..." (count-lines (overlay-start ov) (overlay-end ov))))
            )
-      (overlay-put ov 'help-echo "Hidden text. WindowsKey-s to show")
+      ;; On hover over the overlay display the hidden text.
+      (overlay-put ov 'help-echo (buffer-substring (overlay-start ov)
+ 		                      (overlay-end ov)))
       (put-text-property 0 marker-length 'display (list 'left-fringe 'hs-marker 'hs-fringe-face) marker-string)
       (overlay-put ov 'before-string marker-string)
       (put-text-property 0 (length display-string) 'face 'hs-face display-string)
