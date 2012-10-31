@@ -902,7 +902,7 @@ With argument, do this that many times."
             ;; Enable color theme mode
             (require 'color-theme)
             (require 'color-theme-solarized 'nil 'noerror)
-            (require 'color-theme-zenburn 'nil 'noerror)
+            (require 'zenburn-theme 'nil 'noerror)
 
             ;; (color-theme-solarized-dark)
             ;; (color-theme-solarized-light)
