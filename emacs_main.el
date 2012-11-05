@@ -204,6 +204,20 @@ Same as (system-name) up to the first '.'"
 ;; Dired-recursive-deletes
 (setq-default dired-recursive-deletes 'top)
 
+(defun delete-this-buffer-and-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
+
+
 ;;
 ;;*****************;;
 ;;                 ;;
@@ -582,8 +596,10 @@ With argument, do this that many times."
        (hs-minor-mode 1)
        (setq-default nxml-outline-child-indent 4)
        (setq-default nxml-child-indent 4)
+       (setq-default nxml-slash-auto-complete-flag t)
        ;; Used http://tech.groups.yahoo.com/group/emacs-nxml-mode/message/1399 to customise the grammar.
-       (setq-default rng-schema-locating-files (cons (concat rnc_emacs_home "Schemas/schemas.xml") rng-schema-locating-files))
+       (add-to-list 'rng-schema-locating-files (concat rnc_emacs_home "Schemas/schemas.xml"))
+       (define-key nxml-mode-map (kbd "<C-return>") 'nxml-complete)
        )))
 
 (add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
@@ -938,6 +954,8 @@ With argument, do this that many times."
             (set-face-bold-p 'font-lock-keyword-face t)
             (set-face-underline-p 'font-lock-constant-face t)
 
+            (set-face-foreground 'paren-face-match "Dim Gray")
+            (set-face-background 'paren-face-match "SeaGreen")
             (set-face-foreground 'paren-face-mismatch "White")
             (set-face-background 'paren-face-mismatch "Red")
             (set-face-foreground 'paren-face-no-match "Yellow")

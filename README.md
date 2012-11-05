@@ -20,6 +20,12 @@ Setup
 + Copy the emacs_template to `$HOME/.emacs`
 + Modify the variable `rnc_emacs_home` to point to this repository.
 + Modify other configuration variables in it to your preference.
++ Unless the site installed emacs files are required a user may find it quicker to start emacs with `emacs --no-site-file`.
+
+##### Bye Compile #####
+
+Either byte compile the files manually e.g.
+
 + Byte compile the General directory e.g.
 
 	``emacs --no-site-file --no-init-file --batch --funcall batch-byte-compile `find <repo>/General -name "*.el"` ``
@@ -28,7 +34,10 @@ Setup
 
 	``emacs --no-site-file --load $HOME/.emacs --batch --funcall batch-byte-compile <repo>/emacs_main.el``
 
-Unless the site installed emacs files are required a user may find it quicker to start emacs with `emacs --no-site-file`.
+Or, use the supplied install.sh script e.g.
+
+   ``<install-dir>/install.sh``
+
 
 
 ### Emacs 22 ###
