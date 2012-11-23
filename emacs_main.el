@@ -557,6 +557,20 @@ With argument, do this that many times."
 (define-key-after (lookup-key global-map [menu-bar tools]) [rnc_html] '("HTMLize Buffer" . htmlize-buffer) 'gdb)
 
 
+;; Latex
+(autoload 'latex-mode "auctex.el" "LaTeX editing mode" t nil)
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (progn (TeX-fold-mode 1)
+                   (define-key TeX-mode-map (kbd "<C-return>") 'TeX-complete-symbol))))
+(setq-default reftex-plug-into-AUCTeX t)
+(setq-default TeX-master nil)
+(setq-default TeX-PDF-mode t)
+(setq-default TeX-view-program-selection '(((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "xdg-open") (output-html "xdg-open")))
+(setq-default TeX-parse-self t)
+
 ;; XML-Lite
 ;; Commented out 24/11/2011: nxml mode is default now.
 
@@ -578,6 +592,8 @@ With argument, do this that many times."
                "<!--" ;; won't work on its own; uses syntax table
                (lambda (arg) (my-nxml-forward-element))
                nil))
+
+(add-hook 'sh-mode-hook '(lambda () (hs-minor-mode 1)))
 
 (defun my-nxml-forward-element ()
   (let ((nxml-sexp-element-flag))

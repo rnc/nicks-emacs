@@ -12,6 +12,7 @@ Install via yum:
 + emacs-color-theme
 + emacs-ecb
 + emacs-git
++ emacs-auctex
 
 *(If these are not installed then their RPM contents must be installed manually and added to the load-path)*
 
