@@ -15,11 +15,6 @@
 ;; Emacs Built In Settings ;;
 ;;*************************;;
 
-(if (window-system)
-    (setq-default rnc_x_console t)
-  (setq-default rnc_x_console 'nil)
-  )
-
 ;; Emacs 21
 (if (not (> emacs-major-version 22))
     (progn
@@ -75,8 +70,8 @@
 ;; Switch off the scroll bar and load sml-modeline instead
 (scroll-bar-mode -1)
 (require 'sml-modeline)
-(sml-modeline-mode)
-(set-face-attribute 'sml-modeline-end-face 'nil :inherit 'mode-line-face)
+(sml-modeline-mode 1)
+;; Note : sml-modeline face customisation in 'color' section below.
 
 ;; Fringe face to stand out.
 (set-face-foreground 'fringe "Red")
@@ -390,8 +385,6 @@ Same as (system-name) up to the first '.'"
 ;; Regions/ BUFFERS  ;;
 ;;*******************;;
 
-;###
-
 ;; Smart region selection via Ctrl-Tab
 (autoload 'id-select-and-kill-thing    "id-select"
   "Kill syntactical region selection" t)
@@ -403,8 +396,7 @@ Same as (system-name) up to the first '.'"
   "Keyboard-driven syntactical region selection" t)
 (autoload 'id-select-thing-with-mouse  "id-select"
   "Single mouse click syntactical region selection" t)
-(if rnc_x_console
-    (global-set-key (kbd "C-<tab>") 'id-select-thing))
+(global-set-key (kbd "C-<tab>") 'id-select-thing)
 
 ;; Substring Matching of Buffers for Quick Change
 (autoload 'iswitchb-buffer "iswitchb" "Substring Matching between buffers" t)
@@ -877,116 +869,117 @@ With argument, do this that many times."
 ;; COLOUR      ;;
 ;;*************;;
 ;;
-(if rnc_x_console
+;; Font-lock all modes
+(global-font-lock-mode t)
+(setq-default font-lock-verbose nil)
+;; Enable loads of decorations!
+(setq-default font-lock-maximum-decoration 't)
+;; Fontify up to 512k size
+(setq-default font-lock-maximum-size 512000)
+
+;; C/C++
+(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'c++-mode-hook 'my-c-mode-hook)
+(add-hook 'ctypes-load-hook 'my-ctypes-load-hook)
+
+(defun my-c-mode-hook ()
+  (progn
+    ;; C/C++ font lock enhancments
+    (font-lock-add-keywords 'c++-mode '("\\<\\(c\\(lass\\|onst\\)\\|extern\\|inline\\|p\\(ublic\\|rivate\\|rotected\\)\\|t\\(emplate\\|ypedef\\)\\|friend\\|st\\(atic\\|ruct\\)\\|v\\(irtual\\|olatile\\)\\)\\>"))
+    (font-lock-add-keywords 'c-mode '("\\<\\(const\\|extern\\|typedef\\|st\\(atic\\|ruct\\)\\)\\>"))
+    (require 'ctypes)
+    )
+  )
+
+(defun my-ctypes-load-hook ()
+  (eval-after-load "ctypes"
+    '(progn
+       (ctypes-read-file (concat rnc_emacs_home ".ctypes") 'nil t t)
+       (ctypes-auto-parse-mode 1)
+       )
+    )
+  )
+
+;; Use java-mode for Groovy, jjtree, javaCC input files & ORBLayer files
+(setq auto-mode-alist (cons '("\\.jj\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.jjt\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.visi\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.orbix\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.openorb\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.orbacus\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.jacorb\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.jdk\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.eorb\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.cup\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.sun\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.ibm\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.j9\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.real\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.dummy\\'" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.ofj\\'" . java-mode) auto-mode-alist))
+
+
+;; IDL
+(setq-default auto-mode-alist
+              (append '(("\\.idl\\'" . idl-mode)) auto-mode-alist))
+(require 'idl-font-lock)
+
+(if (symbol-value 'rnc_load_colours)
     (progn
-      ;; Font-lock all modes
-      (global-font-lock-mode t)
-      (setq-default font-lock-verbose nil)
-      ;; Enable loads of decorations!
-      (setq-default font-lock-maximum-decoration 't)
-      ;; Fontify up to 512k size
-      (setq-default font-lock-maximum-size 512000)
+      ;; Enable color theme mode
+      (require 'color-theme)
+      (require 'color-theme-solarized 'nil 'noerror)
+      (require 'zenburn-theme 'nil 'noerror)
 
-      ;; C/C++
-      (add-hook 'c-mode-hook 'my-c-mode-hook)
-      (add-hook 'c++-mode-hook 'my-c-mode-hook)
-      (add-hook 'ctypes-load-hook 'my-ctypes-load-hook)
+      ;; (color-theme-solarized-dark)
+      ;; (color-theme-solarized-light)
+      (if (fboundp 'color-theme-zenburn)
+          (color-theme-zenburn))
 
-      (defun my-c-mode-hook ()
-        (progn
-          ;; C/C++ font lock enhancments
-          (font-lock-add-keywords 'c++-mode '("\\<\\(c\\(lass\\|onst\\)\\|extern\\|inline\\|p\\(ublic\\|rivate\\|rotected\\)\\|t\\(emplate\\|ypedef\\)\\|friend\\|st\\(atic\\|ruct\\)\\|v\\(irtual\\|olatile\\)\\)\\>"))
-          (font-lock-add-keywords 'c-mode '("\\<\\(const\\|extern\\|typedef\\|st\\(atic\\|ruct\\)\\)\\>"))
-          (require 'ctypes)
-          )
-        )
+      ;; Set colours
+      (setq-default default-frame-alist
+                    (add-to-list 'default-frame-alist
+                                 '(cursor-color . "MediumVioletRed")))
+      (setq-default default-frame-alist
+                    (add-to-list 'default-frame-alist
+                                 '(mouse-color  . "MediumVioletRed")))
 
-      (defun my-ctypes-load-hook ()
-        (eval-after-load "ctypes"
-          '(progn
-             (ctypes-read-file (concat rnc_emacs_home ".ctypes") 'nil t t)
-             (ctypes-auto-parse-mode 1)
-             )
-          )
-        )
+      ;; Change cursor color according to mode. To add read-only detection
+      ;; add " (if buffer-read-only "white" " to the below if block.
+      (defvar hcz-set-cursor-color-color "")
+      (defvar hcz-set-cursor-color-buffer "")
+      (defun hcz-set-cursor-color-according-to-mode ()
+        "change cursor color according to some minor modes."
+        ;; set-cursor-color is somewhat costly, so we only call it when needed:
+        (let ((color
+               (if overwrite-mode "red"
+                 "yellow")))
+          (unless (and
+                   (string= color hcz-set-cursor-color-color)
+                   (string= (buffer-name) hcz-set-cursor-color-buffer))
+            (set-cursor-color (setq hcz-set-cursor-color-color color))
+            (setq hcz-set-cursor-color-buffer (buffer-name)))))
+      (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
 
-      ;; Use java-mode for Groovy, jjtree, javaCC input files & ORBLayer files
-      (setq auto-mode-alist (cons '("\\.jj\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.jjt\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.visi\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.orbix\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.openorb\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.orbacus\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.jacorb\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.jdk\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.eorb\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.cup\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.sun\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.ibm\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.j9\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.real\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.dummy\\'" . java-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.ofj\\'" . java-mode) auto-mode-alist))
+      (set-face-italic-p 'font-lock-comment-face t)
+      (set-face-bold-p 'font-lock-keyword-face t)
+      (set-face-underline-p 'font-lock-constant-face t)
 
+      (set-face-foreground 'paren-face-match "Dim Gray")
+      (set-face-background 'paren-face-match "SeaGreen")
+      (set-face-foreground 'paren-face-mismatch "White")
+      (set-face-background 'paren-face-mismatch "Red")
+      (set-face-foreground 'paren-face-no-match "Yellow")
+      (set-face-background 'paren-face-no-match "Red")
 
-      ;; IDL
-      (setq-default auto-mode-alist
-                    (append '(("\\.idl\\'" . idl-mode)) auto-mode-alist))
-      (require 'idl-font-lock)
+      (modify-face 'region "black" "khaki" nil nil nil nil nil nil)
+      (modify-face 'lazy-highlight "#f0dfaf" "#5f5f5f" nil nil nil nil t nil)
 
-      (if (symbol-value 'rnc_load_colours)
-          (progn
-            ;; Enable color theme mode
-            (require 'color-theme)
-            (require 'color-theme-solarized 'nil 'noerror)
-            (require 'zenburn-theme 'nil 'noerror)
+      (set-face-attribute 'sml-modeline-end-face 'nil :inherit 'modeline :width 'condensed)
+      (set-face-attribute 'sml-modeline-vis-face 'nil :inherit 'region)
+      )
+  )
 
-            ;; (color-theme-solarized-dark)
-            ;; (color-theme-solarized-light)
-            (if (fboundp 'color-theme-zenburn)
-                (color-theme-zenburn))
-
-            ;; Set colours
-            (setq-default default-frame-alist
-                          (add-to-list 'default-frame-alist
-                                       '(cursor-color . "MediumVioletRed")))
-            (setq-default default-frame-alist
-                          (add-to-list 'default-frame-alist
-                                       '(mouse-color  . "MediumVioletRed")))
-
-            ;; Change cursor color according to mode. To add read-only detection
-            ;; add " (if buffer-read-only "white" " to the below if block.
-            (defvar hcz-set-cursor-color-color "")
-            (defvar hcz-set-cursor-color-buffer "")
-            (defun hcz-set-cursor-color-according-to-mode ()
-              "change cursor color according to some minor modes."
-              ;; set-cursor-color is somewhat costly, so we only call it when needed:
-              (let ((color
-                     (if overwrite-mode "red"
-                       "yellow")))
-                (unless (and
-                         (string= color hcz-set-cursor-color-color)
-                         (string= (buffer-name) hcz-set-cursor-color-buffer))
-                  (set-cursor-color (setq hcz-set-cursor-color-color color))
-                  (setq hcz-set-cursor-color-buffer (buffer-name)))))
-            (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
-
-            (set-face-italic-p 'font-lock-comment-face t)
-            (set-face-bold-p 'font-lock-keyword-face t)
-            (set-face-underline-p 'font-lock-constant-face t)
-
-            (set-face-foreground 'paren-face-match "Dim Gray")
-            (set-face-background 'paren-face-match "SeaGreen")
-            (set-face-foreground 'paren-face-mismatch "White")
-            (set-face-background 'paren-face-mismatch "Red")
-            (set-face-foreground 'paren-face-no-match "Yellow")
-            (set-face-background 'paren-face-no-match "Red")
-
-            (modify-face 'region "black" "khaki" nil nil nil nil nil nil)
-            (modify-face 'lazy-highlight "#f0dfaf" "#5f5f5f" nil nil nil nil t nil)
-            )
-        )
-      ));; End of progn if window system
 
 
 ;; C++ / C
