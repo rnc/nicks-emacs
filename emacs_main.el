@@ -72,8 +72,15 @@
 ;; Switch off the toolbar.
 (tool-bar-mode 0)
 
+;; Switch off the scroll bar and load sml-modeline instead
+(scroll-bar-mode -1)
+(require 'sml-modeline)
+(sml-modeline-mode)
+(set-face-attribute 'sml-modeline-end-face 'nil :inherit 'mode-line-face)
+
 ;; Fringe face to stand out.
 (set-face-foreground 'fringe "Red")
+(setq-default default-indicate-buffer-boundaries 'right)
 
 (global-set-key (kbd "M-<RET>") 'keyboard-quit)
 (setq-default indicate-empty-lines 't)
@@ -153,10 +160,6 @@ Same as (system-name) up to the first '.'"
 (setq-default column-number-mode t)
 ;; Window System doesn't change focus when I move the mouse
 (setq-default focus-follows-mouse 'nil)
-;; Scroll Bar right (enclose in if for those emacs without X)
-(if window-system
-    (set-scroll-bar-mode 'right)
-  )
 ;; Handle case sensitive / insensitive searching
 (setq-default case-fold-search 'nil)
 ;; Preserve case in replacements
@@ -386,6 +389,8 @@ Same as (system-name) up to the first '.'"
 ;;*******************;;
 ;; Regions/ BUFFERS  ;;
 ;;*******************;;
+
+;###
 
 ;; Smart region selection via Ctrl-Tab
 (autoload 'id-select-and-kill-thing    "id-select"
@@ -991,7 +996,7 @@ With argument, do this that many times."
   '(
     ;; Tab key always reindents. CC-mode means this always inserts spaces
     (c-tab-always-indent . t)
-    ;; Offset of 3
+    ;; Offset of 4
     (c-basic-offset . 4)
     ;; Indent comments as well
     (c-indent-comments-syntactically-p . t)
