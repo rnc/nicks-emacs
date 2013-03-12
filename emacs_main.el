@@ -73,8 +73,6 @@
 (sml-modeline-mode 1)
 ;; Note : sml-modeline face customisation in 'color' section below.
 
-;; Fringe face to stand out.
-(set-face-foreground 'fringe "Red")
 (setq-default default-indicate-buffer-boundaries 'right)
 
 (global-set-key (kbd "M-<RET>") 'keyboard-quit)
@@ -99,10 +97,9 @@
       ;; C-xc by mistake and quitting which is bloody annoying!
       ;; toggle-read-only now takes quits place. vc-toggle takes an unused.
       (global-unset-key "\C-x\C-c")     ; Was save-buffers-kill-emacs
-      (global-unset-key "\C-x\C-q")     ; Was vc-toggle-read-only
+      (global-unset-key "\C-x\C-q")     ; Was toggle-read-only
       (global-unset-key "\C-x\C-z")     ; Was suspend-frame (iconify)
       (global-unset-key "\C-z")         ; Was suspend-frame (iconify)
-      (global-set-key (kbd "C-x c") 'vc-toggle-read-only) ; Was Undefined
       (global-set-key (kbd "C-x C-c") 'toggle-read-only) ; Was save-buffers-kill-emacs
       (global-set-key (kbd "C-x C-q") 'save-buffers-kill-emacs) ; Was vc-toggle-read-only
       ))
@@ -555,13 +552,14 @@ With argument, do this that many times."
 
 
 ;; Latex
-(autoload 'latex-mode "auctex.el" "LaTeX editing mode" t nil)
+(autoload 'latex-mode "auctex" "LaTeX editing mode" t nil)
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook
           (lambda ()
-            (progn (TeX-fold-mode 1)
-                   (define-key TeX-mode-map (kbd "<C-return>") 'TeX-complete-symbol))))
+            (eval-after-load "auctex"
+              '(progn (TeX-fold-mode 1)
+                   (define-key TeX-mode-map (kbd "<C-return>") 'TeX-complete-symbol)))))
 (setq-default reftex-plug-into-AUCTeX t)
 (setq-default TeX-master nil)
 (setq-default TeX-PDF-mode t)
@@ -681,21 +679,6 @@ With argument, do this that many times."
 ;; emacs FAQ question 104
 ;; (global-set-key [C-kp-add] 'calculator)
 
-;; Enriched Text Mode
-;;
-(make-face 'rnc-face-enriched-done)
-(set-face-doc-string 'rnc-face-enriched-done "rnc-face-enriched-done")
-(set-face-attribute 'rnc-face-enriched-done 'nil :strike-through "gray50")
-(set-face-italic-p 'rnc-face-enriched-done 'nil)
-(set-face-bold-p 'rnc-face-enriched-done 'b)
-(set-face-background 'rnc-face-enriched-done "grey85")
-
-(make-face 'rnc-face-enriched-local)
-(set-face-doc-string 'rnc-face-enriched-local "rnc-face-enriched-local")
-(set-face-attribute 'rnc-face-enriched-local 'nil :strike-through 'nil)
-(set-face-italic-p 'rnc-face-enriched-local 'nil)
-(set-face-bold-p 'rnc-face-enriched-local 't)
-(set-face-background 'rnc-face-enriched-local "grey85")
 
 ;; Extra Modes for generic-mode
 (require 'generic-x)
@@ -943,6 +926,9 @@ With argument, do this that many times."
       (setq-default default-frame-alist
                     (add-to-list 'default-frame-alist
                                  '(mouse-color  . "MediumVioletRed")))
+
+      ;; Fringe face to stand out.
+      (set-face-foreground 'fringe "Red")
 
       ;; Change cursor color according to mode. To add read-only detection
       ;; add " (if buffer-read-only "white" " to the below if block.
