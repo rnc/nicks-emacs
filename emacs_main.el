@@ -757,9 +757,6 @@ With argument, do this that many times."
 (global-set-key (kbd "C-<pause>") 'my-pcl-cvs-jacorb)
 
 
-;; Doc mode
-(require 'doc-mode)
-
 (if (not (boundp 'rnc_disable_ecb_load))
     (progn
       (x-popup-dialog t '("Unknown config variable rnc_disable_ecb_load. Upgrade .emacs file" ("Ok" . nil)))
@@ -1039,8 +1036,6 @@ With argument, do this that many times."
 (defun my-c-mode-common-hook ()
   ;; HideShow Mode
   (hs-minor-mode)
-  ;; Doc Mode
-  (doc-mode)
   ;; Auto-newline
   (c-toggle-auto-newline 1)
   ;; Add my styles
