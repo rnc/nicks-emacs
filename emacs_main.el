@@ -588,8 +588,6 @@ With argument, do this that many times."
                (lambda (arg) (my-nxml-forward-element))
                nil))
 
-(add-hook 'sh-mode-hook '(lambda () (hs-minor-mode 1)))
-
 (defun my-nxml-forward-element ()
   (let ((nxml-sexp-element-flag))
     (eval-after-load "nxml-mode"
@@ -613,9 +611,27 @@ With argument, do this that many times."
        (define-key nxml-mode-map (kbd "<C-return>") 'nxml-complete)
        )))
 
-(add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
-
 (add-to-list 'auto-mode-alist '("\\.pom$" . nxml-mode))
+
+(add-hook 'c-mode-common-hook 'hs-minor-mode)
+(add-hook 'conf-mode-hook 'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'lisp-mode-hook 'hs-minor-mode)
+(add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
+(add-hook 'python-mode-hook 'hs-minor-mode)
+(add-hook 'sh-mode-hook 'hs-minor-mode)
+
+(add-to-list 'hs-special-modes-alist
+             '(conf-unix-mode
+               "#{{{"
+               "#}}}"
+               "#"
+              (lambda (arg) (search-forward-regexp "#}}}")) nil))
+
+;; Folding for modes where we can't detect it automatically.
+;;(require 'folding)
+;;(folding-add-to-marks-list 'conf-unix-mode "#{{{" "#}}}" nil t)
+;;(add-hook 'conf-mode-hook 'folding-mode)
 
 ;; Fix for commenting in xml - see http://www.emacswiki.org/emacs/NxmlMode
 (require 'mz-comment-fix)
@@ -906,15 +922,24 @@ With argument, do this that many times."
 
 (if (symbol-value 'rnc_load_colours)
     (progn
-      ;; Enable color theme mode
-      (require 'color-theme)
-      (require 'color-theme-solarized 'nil 'noerror)
-      (require 'zenburn-theme 'nil 'noerror)
 
-      ;; (color-theme-solarized-dark)
-      ;; (color-theme-solarized-light)
-      (if (fboundp 'color-theme-zenburn)
-          (color-theme-zenburn))
+      (if (not (>= emacs-major-version 24))
+          (progn
+            ;; Enable color theme mode
+            (require 'color-theme)
+            (require 'color-theme-solarized 'nil 'noerror)
+            (require 'zenburn-theme 'nil 'noerror)
+
+            ;; (color-theme-solarized-dark)
+            ;; (color-theme-solarized-light)
+            (if (fboundp 'color-theme-zenburn)
+                (color-theme-zenburn))
+            )
+        (progn
+          ;;(load-theme 'solarized-light t)
+          (load-theme 'zenburn t)
+          )
+        )
 
       ;; Set colours
       (setq-default default-frame-alist
