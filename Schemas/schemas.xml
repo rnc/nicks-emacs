@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
-  <uri pattern="pom.xml"
-       uri="maven-v4_0_0.rnc"
-       />
+  <uri pattern="pom.xml" uri="maven-v4_0_0.rnc"/>
+
+  <!-- For this to work correctly checkout https://github.com/ndw/xslt-relax-ng -->
+  <!-- and create a symbolic link to it -->
+  <uri pattern="*.xsl" typeId="XSLT"/>
+  <documentElement prefix="xsl" localName="transform" typeId="XSLT"/>
+  <typeId id="XSLT" uri="xslt-relax-ng/xslt.rnc"/>
 </locatingRules>

@@ -606,11 +606,14 @@ With argument, do this that many times."
        (setq-default nxml-outline-child-indent 4)
        (setq-default nxml-child-indent 4)
        (setq-default nxml-slash-auto-complete-flag t)
-       ;; Used http://tech.groups.yahoo.com/group/emacs-nxml-mode/message/1399 to customise the grammar.
-       (add-to-list 'rng-schema-locating-files (concat rnc_emacs_home "Schemas/schemas.xml"))
        (define-key nxml-mode-map (kbd "<C-return>") 'nxml-complete)
        )))
-
+(eval-after-load "rng-loc"
+  '(progn
+     ;; Used http://tech.groups.yahoo.com/group/emacs-nxml-mode/message/1399 to customise the grammar.
+     (add-to-list 'rng-schema-locating-files (concat rnc_emacs_home "Schemas/schemas.xml"))
+     )
+)
 (add-to-list 'auto-mode-alist '("\\.pom$" . nxml-mode))
 
 (add-hook 'c-mode-common-hook 'hs-minor-mode)
