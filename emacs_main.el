@@ -1,4 +1,5 @@
-(message (concat "START emacs_main:" (current-time-string)))
+(message (concat "START emacs_main:" (format-time-string "%H:%M:%S %3Nms")))
+
 ;;
 ;;
 ;; R.N.Cross
@@ -849,19 +850,23 @@ With argument, do this that many times."
 
 
 ;; GIT
-(require 'git)
-(define-key git-status-mode-map "="   'my-git-diff-file)
-(define-key git-status-mode-map "\M-="   'git-diff-file)
-(defun my-git-diff-file ()
-  "Diff the marked file(s) against HEAD *ignoring* whitespace."
-  (interactive)
-  (let ((files (git-marked-files)))
-    (git-setup-diff-buffer
-     (apply #'git-run-command-buffer "*git-diff*" "diff-index" "-w" "-p" "-M" "HEAD" "--" (git-get-filenames files)))))
-
+(autoload 'git-status "git" "GIT Mode" 't)
+(eval-after-load "git"
+  '(progn
+     (define-key git-status-mode-map "="   'my-git-diff-file)
+     (define-key git-status-mode-map "\M-="   'git-diff-file)
+     (defun my-git-diff-file ()
+       "Diff the marked file(s) against HEAD *ignoring* whitespace."
+       (interactive)
+       (let ((files (git-marked-files)))
+         (git-setup-diff-buffer
+          (apply #'git-run-command-buffer "*git-diff*" "diff-index" "-w" "-p" "-M" "HEAD" "--" (git-get-filenames files)))))
+     ))
+(autoload 'git-blame-mode "git-blame" "Minor mode for incremental blame for Git." t)
 
 ;; Subversion
-(require 'psvn)
+(autoload 'svn-status "psvn" "PSVN Mode" 't)
+(autoload 'svn-examine "psvn" "PSVN Mode" 't)
 (setq-default svn-log-edit-use-log-edit-mode nil)
 
 ;;*************;;
@@ -930,7 +935,7 @@ With argument, do this that many times."
           (progn
             ;; Enable color theme mode
             (require 'color-theme)
-            (require 'color-theme-solarized 'nil 'noerror)
+            ;; (require 'color-theme-solarized 'nil 'noerror)
             (require 'zenburn-theme 'nil 'noerror)
 
             ;; (color-theme-solarized-dark)
@@ -1208,4 +1213,4 @@ With argument, do this that many times."
 (define-key-after (lookup-key global-map [menu-bar help-menu]) [rnc_separator] '("--") 'describe-no-warranty)
 
 
-(message (concat "DONE emacs_main:" (current-time-string)))
+(message (concat "DONE emacs_main:" (format-time-string "%H:%M:%S %3Nms")))
