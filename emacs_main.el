@@ -731,6 +731,11 @@ With argument, do this that many times."
 (setq-default cvs-auto-remove-handled 'delayed)
 (setq-default cvs-find-file-and-jump t)
 
+;;
+;; Makefile mode (Makefile.*)
+(add-to-list 'auto-mode-alist '("Makefile.*" . makefile-gmake-mode))
+
+
 (defun my-pcl-cvs-jacorb ()
   "Automatically examine JACORB_HOME CVS directory"
   (interactive)
