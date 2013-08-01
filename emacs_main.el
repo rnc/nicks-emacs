@@ -200,6 +200,10 @@ Same as (system-name) up to the first '.'"
 ;; Dired-recursive-deletes
 (setq-default dired-recursive-deletes 'top)
 
+(add-hook 'dired-load-hook
+          (lambda () (require 'dired-sort-menu)))
+
+
 (defun delete-this-buffer-and-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
