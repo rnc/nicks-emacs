@@ -857,6 +857,12 @@ With argument, do this that many times."
       ))
 (setq-default findbugs-java-home "/usr/local/jdk1.6.0/bin/java")
 
+;; Bookmarks
+(global-set-key (kbd "<f12>") 'bookmark-bmenu-list)
+(eval-after-load "bookmark"
+  '(progn
+     (setq-default bookmark-save-flag 1)
+     ))
 
 ;; GIT
 (autoload 'git-status "git" "GIT Mode" 't)
