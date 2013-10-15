@@ -29,8 +29,7 @@
 
 ;; Set this variable to the install location e.g.
 ;; "N:\emacs" or "/usr/users/rnc/emacs"
-(defconst rnc_emacs_home (concat "/home/rnc/emacs"
-                                 (char-to-string directory-sep-char))
+(defconst rnc_emacs_home (concat "/home/rnc/emacs/")
   "Root directory path to where emacs customisation is stored.")
 
 
@@ -64,8 +63,7 @@
                         ("Ok" . nil)))
   )
 
-(let ((packagehome (concat rnc_emacs_home "Packages"
-                           (char-to-string directory-sep-char))))
+(let ((packagehome (concat rnc_emacs_home "Packages/")))
 
   ;; Do the info path settings as well
   (setq Info-default-directory-list (cons packagehome Info-default-directory-list))
@@ -96,9 +94,15 @@
 
   )
 
+
+; Example theme installation
+;  (add-to-list 'custom-theme-load-path "/home/..../emacs-color-theme-solarized")
+;  (add-to-list 'custom-theme-load-path "/home/..../zenburn-emacs")
+
+
 (setq load-path (cons (concat rnc_emacs_home "General") load-path))
 
-(load (concat rnc_emacs_home "emacs_main"))
+(load (concat rnc_emacs_home "emacs_main") 'nil 't)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

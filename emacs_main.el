@@ -959,8 +959,12 @@ With argument, do this that many times."
                 (color-theme-zenburn))
             )
         (progn
-          ;;(load-theme 'solarized-light t)
-          (load-theme 'zenburn t)
+          (condition-case nil
+              ;;(load-theme 'solarized-light t)
+              (load-theme 'zenburn t)
+            (error
+             (message "Unable to find zenburn theme to load. Setup custom-theme-load-path")
+             ))
           )
         )
 
