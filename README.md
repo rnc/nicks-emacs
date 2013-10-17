@@ -3,7 +3,7 @@ Emacs Setup
 ===========
 
 
-This repository contains my custom emacs settings. It has been tested on Fedora 18 & Emacs 24.
+This repository contains my custom emacs settings. It has been tested on Fedora 19 & Emacs 24.3.
 
 Prerequisites
 -------------
