@@ -884,6 +884,34 @@ With argument, do this that many times."
 (autoload 'svn-examine "psvn" "PSVN Mode" 't)
 (setq-default svn-log-edit-use-log-edit-mode nil)
 
+(eval-after-load "vc-git"
+  '(defun vc-git-print-log (files buffer &optional shortlog start-revision limit)
+  "Get change log associated with FILES.
+Note that using SHORTLOG requires at least Git version 1.5.6,
+for the --graph option."
+  (let ((coding-system-for-read vc-git-commits-coding-system))
+    ;; `vc-do-command' creates the buffer, but we need it before running
+    ;; the command.
+    (vc-setup-buffer buffer)
+    ;; If the buffer exists from a previous invocation it might be
+    ;; read-only.
+    (let ((inhibit-read-only t))
+      (with-current-buffer
+          buffer
+        (apply 'vc-git-command buffer
+               'async files
+               (append
+                '("log" "--follow" "--no-color")
+                (when shortlog
+                  `("--graph" "--decorate" "--date=short"
+                    ,(format "--pretty=tformat:%s"
+                             (car vc-git-root-log-format))
+                    "--abbrev-commit"))
+                (when limit (list "-n" (format "%s" limit)))
+                (when start-revision (list start-revision))
+                '("--")))))))
+  )
+
 ;;*************;;
 ;; COLOUR      ;;
 ;;*************;;
