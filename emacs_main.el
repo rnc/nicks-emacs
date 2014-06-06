@@ -139,8 +139,10 @@ Same as (system-name) up to the first '.'"
 )
 
 
-;; after mouse selection in X11, you can paste by `yank' in emacs
-(setq x-select-enable-primary t)
+
+;; This unifies the X clipboard/selection buffers. After setting to t, you can paste by `yank' in emacs
+;; See my-yank-primary below.
+;; (setq x-select-enable-primary 'nil)
 ;; Set the default file creation to u=rw, o=r, g=r -> 420
 ;; Set the default file creation to u=rw, o=r, g=r, uog+x for directories
 (set-default-file-modes 493)
@@ -483,17 +485,39 @@ With argument, do this that many times."
 (global-set-key [(meta backspace)] 'backward-kill-line)
 (global-set-key [(meta delete)] 'forward-kill-line)
 
-(if (string-equal system-type "windows-nt")
-    (progn
-      (message "Disabling cut/paste to NT clipboard. Use toggle-use-x-clipboard to enable")
-      (setq-default x-select-enable-clipboard nil)
+;; Rather than unifying the X buffers this allows keyboard pasting of the primary selection
+;; rather than having to always use the mouse.
+(defun my-yank-primary ()
+   (interactive)
+  ;; Without this, confusing things happen upon e.g. inserting into
+  ;; the middle of an active region.
+  (when select-active-regions
+    (let (select-active-regions)
+      (deactivate-mark)))
+  ;; (or mouse-yank-at-point (mouse-set-point click))
+  (let ((primary
+	 (cond
+	  ((eq (framep (selected-frame)) 'w32)
+	   ;; MS-Windows emulates PRIMARY in x-get-selection, but not
+	   ;; in x-get-selection-value (the latter only accesses the
+	   ;; clipboard).  So try PRIMARY first, in case they selected
+	   ;; something with the mouse in the current Emacs session.
+	   (or (x-get-selection 'PRIMARY)
+	       (x-get-selection-value)))
+	  ((fboundp 'x-get-selection-value) ; MS-DOS and X.
+	   ;; On X, x-get-selection-value supports more formats and
+	   ;; encodings, so use it in preference to x-get-selection.
+	   (or (x-get-selection-value)
+	       (x-get-selection 'PRIMARY)))
+	  ;; FIXME: What about xterm-mouse-mode etc.?
+	  (t
+	   (x-get-selection 'PRIMARY)))))
+    (unless primary
+      (error "No selection is available"))
+    (push-mark (point))
+    (insert primary)))
 
-      (defun toggle-use-x-clipboard ()
-        (interactive)
-        (setq-default x-select-enable-clipboard (not x-select-enable-clipboard))
-        (message "x-select-enable-clipboard set to %s" x-select-enable-clipboard))
-      )
-  )
+(global-set-key (kbd "C-<insert>") 'my-yank-primary)
 
 (defvar indirect-mode-name nil
   "Mode to set for indirect buffers.")
