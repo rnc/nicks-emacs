@@ -62,6 +62,11 @@
     )
   )
 
+;; Make this emacs instance run as a server
+(require 'server)
+(unless (server-running-p)
+    (server-start))
+
 ;; Put backups into autosaved directory
 (setq-default backup-directory-alist '(("." . "~/.emacs.d/autosaved")))
 
@@ -133,6 +138,9 @@ Same as (system-name) up to the first '.'"
     )
 )
 
+
+;; after mouse selection in X11, you can paste by `yank' in emacs
+(setq x-select-enable-primary t)
 ;; Set the default file creation to u=rw, o=r, g=r -> 420
 ;; Set the default file creation to u=rw, o=r, g=r, uog+x for directories
 (set-default-file-modes 493)
@@ -159,9 +167,6 @@ Same as (system-name) up to the first '.'"
 (setq-default case-replace t)
 ;; Auto-compression mode
 (auto-compression-mode t)
-;; Cutting and pasting uses the clipboard in addition to the
-;; primary selection
-;;(setq-default x-select-enable-clipboard nil)
 ;; Imenu sort by name
 (setq-default imenu-sort-function 'imenu--sort-by-name)
 ;; Mouse menu group buffers by mode
@@ -1126,10 +1131,7 @@ for the --graph option."
   ;; this causes "my-style" to be used in every mode.
   (setq c-default-style '((other . "Default Coding Style")))
   ;; Force correct indentation style (if we are in the JacORB tree use that style).
-  (if (and (buffer-file-name)
-           (or (string-match "src\/org\/jacorb" (buffer-file-name))
-               (string-match "test\/regression\/src\/orb/\/jacorb" (buffer-file-name)))
-           )
+  (if (and (buffer-file-name) (string-match "org\/jacorb" (buffer-file-name)))
       (c-set-style "JacORB Coding Style")
     (c-set-style "Default Coding Style")
     )
