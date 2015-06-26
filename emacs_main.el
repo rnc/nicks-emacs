@@ -67,9 +67,6 @@
 (unless (server-running-p)
     (server-start))
 
-;; Put backups into autosaved directory
-(setq-default backup-directory-alist '(("." . "~/.emacs.d/autosaved")))
-
 ;; Switch off the toolbar.
 (tool-bar-mode 0)
 
@@ -165,6 +162,7 @@ Same as (system-name) up to the first '.'"
 (setq-default focus-follows-mouse 'nil)
 ;; Handle case sensitive / insensitive searching
 (setq-default case-fold-search 'nil)
+(global-set-key (kbd "C-x c") 'toggle-case-fold-search) ; Was Undefined
 ;; Preserve case in replacements
 (setq-default case-replace t)
 ;; Auto-compression mode
@@ -365,18 +363,25 @@ Same as (system-name) up to the first '.'"
 (autoload 'resync-files "resync" "Resync All Loaded Files" t)
 (global-set-key (kbd "M-<f20>") 'resync-files)
 
+
 ;; Autosaves (defaults to on)
 (setq-default auto-save-default t)
 (setq-default auto-save-interval 100)
 (setq-default auto-save-timeout 20)     ;; 20 sec inactivity triggers auto-save
 ;; Backups
+;; Put backups into autosaved directory
+(setq-default backup-directory-alist '((".*" . "/tmp/emacs.d/autosaved")))
 (setq-default make-backup-files t)
 (setq-default backup-by-copying t)
 (setq-default backup-by-copying-when-mismatch t)
+(setq-default delete-old-versions t)
+(setq-default kept-new-versions 6)
+(setq-default kept-old-versions 2)
 (setq-default vc-make-backup-files t)   ;; backup even cvs/rcs files
 (setq-default vc-follow-symlinks t)     ;; follow symbolic links to cvs files
 (setq-default vc-cvs-stay-local 'nil)   ;; stay local
-(setq-default version-control 'nil)     ;; do not make version numbers for backup files
+(setq-default version-control 't)
+     ;; do not make version numbers for backup files
 
 ;;
 ;; Printing enhancements
@@ -393,6 +398,8 @@ Same as (system-name) up to the first '.'"
 ;;*******************;;
 ;; Regions/ BUFFERS  ;;
 ;;*******************;;
+
+(global-set-key (kbd "<C-S-mouse-1>") 'browse-url-at-mouse)
 
 ;; Smart region selection via Ctrl-Tab
 (autoload 'id-select-and-kill-thing    "id-select"
@@ -555,6 +562,11 @@ With argument, do this that many times."
 ;; Markdown
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files." t)
 (setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
+(eval-after-load "markdown-mode"
+  '(progn
+     (define-key markdown-mode-map (kbd "M-<up>") 'page-down-one)
+     (define-key markdown-mode-map (kbd "M-<down>") 'page-up-one)
+     ))
 
 ;; AWK
 (autoload 'awk-mode "cc-mode" nil t)
@@ -1055,7 +1067,7 @@ for the --graph option."
 
       (set-face-italic-p 'font-lock-comment-face t)
       (set-face-bold-p 'font-lock-keyword-face t)
-      (set-face-underline-p 'font-lock-constant-face t)
+      (set-face-underline 'font-lock-constant-face t)
 
       (set-face-foreground 'paren-face-match "Dim Gray")
       (set-face-background 'paren-face-match "SeaGreen")
