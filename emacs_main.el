@@ -414,29 +414,11 @@ Same as (system-name) up to the first '.'"
   "Single mouse click syntactical region selection" t)
 (global-set-key (kbd "C-<tab>") 'id-select-thing)
 
-;; Substring Matching of Buffers for Quick Change
-(autoload 'iswitchb-buffer "iswitchb" "Substring Matching between buffers" t)
-(iswitchb-mode 1)
-(setq read-buffer-function 'iswitchb-read-buffer)
-(setq-default iswitchb-case t)
-(setq-default iswitchb-default-method 'samewindow)
+;; Emacs 24 now prefers icomplete over iswitchb
+(icomplete-mode)
 
 ;; Uniquify buffer name
 (require 'uniquify)
-(setq-default uniquify-buffer-name-style 'post-forward)
-(defadvice iswitchb-kill-buffer (after rescan-after-kill activate)
-  "*Regenerate the list of matching buffer names after a kill.
-    Necessary if using `uniquify' with `uniquify-after-kill-buffer-p'
-    set to non-nil."
-  (setq iswitchb-buflist iswitchb-matches)
-  (iswitchb-rescan))
-
-(defun iswitchb-rescan ()
-  "*Regenerate the list of matching buffer names."
-  (interactive)
-  (iswitchb-make-buflist iswitchb-default)
-  (setq iswitchb-rescan t))
-
 
 ;; Autocirculate buffers with C-, C-. C-<, C->
 (autoload 'cycle-buffer "cycle-buffer" "Cycle forward." t)
