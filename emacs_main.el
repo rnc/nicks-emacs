@@ -416,10 +416,7 @@ Same as (system-name) up to the first '.'"
 
 ;; Emacs 24 now prefers icomplete over iswitchb
 (icomplete-mode)
-(eval-after-load "icomplete-mode"
-  '(progn
-     (define-key icomplete-minibuffer-map (kbd "<return>") 'minibuffer-force-complete-and-exit)
-     ))
+(define-key icomplete-minibuffer-map (kbd "<return>") 'minibuffer-force-complete-and-exit)
 
 ;; Uniquify buffer name
 (require 'uniquify)
