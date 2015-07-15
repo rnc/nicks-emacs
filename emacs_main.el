@@ -416,7 +416,8 @@ Same as (system-name) up to the first '.'"
 
 ;; Emacs 24 now prefers icomplete over iswitchb
 (icomplete-mode)
-(define-key icomplete-minibuffer-map (kbd "<return>") 'minibuffer-force-complete-and-exit)
+(define-key icomplete-minibuffer-map (kbd "C-<return>") 'minibuffer-force-complete-and-exit)
+(define-key icomplete-minibuffer-map (kbd "C-l") 'minibuffer-force-complete)
 
 ;; Uniquify buffer name
 (require 'uniquify)
@@ -632,8 +633,8 @@ With argument, do this that many times."
   (eval-after-load "nxml-mode"
     '(progn
        (hs-minor-mode 1)
-       (setq-default nxml-outline-child-indent 4)
-       (setq-default nxml-child-indent 4)
+       (setq-default nxml-outline-child-indent 2)
+       (setq-default nxml-child-indent 2)
        (setq-default nxml-slash-auto-complete-flag t)
        (define-key nxml-mode-map (kbd "<C-return>") 'nxml-complete)
        )))
