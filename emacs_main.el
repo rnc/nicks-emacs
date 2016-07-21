@@ -415,6 +415,8 @@ Same as (system-name) up to the first '.'"
 (global-set-key (kbd "C-<tab>") 'id-select-thing)
 
 ;; Emacs 24 now prefers icomplete over iswitchb
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Icomplete.html
+;; Ctrl- [ , | . ] to rotate selections and Ctrl-return to select.
 (icomplete-mode)
 (define-key icomplete-minibuffer-map (kbd "C-<return>") 'minibuffer-force-complete-and-exit)
 (define-key icomplete-minibuffer-map (kbd "C-l") 'minibuffer-force-complete)
@@ -542,6 +544,14 @@ With argument, do this that many times."
 ;;*************;;
 ;; MODES       ;;
 ;;*************;;
+
+;; Yaml
+(autoload 'yaml-mode "yaml-mode" "Major mode for editing Yaml files." t)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
+(add-hook 'yaml-mode-hook
+          '(lambda ()
+             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 
 ;; Markdown
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files." t)
@@ -808,7 +818,6 @@ With argument, do this that many times."
            (kill-buffer buffer)))))
 (global-set-key (kbd "C-x C-<pause>") 'kill-cvsignore-buffers)
 (global-set-key (kbd "M-<pause>") 'kill-changelog-buffers)
-(global-set-key (kbd "C-<pause>") 'my-pcl-cvs-jacorb)
 
 
 (if (not (boundp 'rnc_disable_ecb_load))
