@@ -567,6 +567,13 @@ With argument, do this that many times."
 ;; MODES       ;;
 ;;*************;;
 
+;; Speedbar
+(require 'sr-speedbar)
+(global-set-key [f8] 'sr-speedbar-toggle)
+(setq-default sr-speedbar-right-side 'nil)
+(setq-default sr-speedbar-width 20)
+(setq-default speedbar-show-unknown-files t)
+
 ;; Yaml
 (autoload 'yaml-mode "yaml-mode" "Major mode for editing Yaml files." t)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
