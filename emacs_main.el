@@ -567,9 +567,15 @@ With argument, do this that many times."
 ;; MODES       ;;
 ;;*************;;
 
+
+;; Docker
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
 ;; Speedbar
 (require 'sr-speedbar)
 (global-set-key [f8] 'sr-speedbar-toggle)
+(global-set-key (kbd "M-<f8>") 'sr-speedbar-refresh-toggle)
 (setq-default sr-speedbar-right-side 'nil)
 (setq-default sr-speedbar-width 20)
 (setq-default speedbar-show-unknown-files t)
