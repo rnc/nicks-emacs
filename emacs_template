@@ -58,8 +58,8 @@
 ;;                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(if (< emacs-major-version 21)
-    (x-popup-dialog t '("Warning - Emacs version must be 21 or above"
+(if (< emacs-major-version 26)
+    (x-popup-dialog t '("Warning - Emacs version must be 26 or above"
                         ("Ok" . nil)))
   )
 
@@ -68,37 +68,14 @@
   ;; Do the info path settings as well
   (setq Info-default-directory-list (cons packagehome Info-default-directory-list))
 
-  ;; For Emacs < v23.0 supply my patch files
-  (if (not (> emacs-major-version 22))
-      (progn
-        (setq load-path (cons (concat packagehome
-                                      "ps-print"
-                                      (char-to-string directory-sep-char)
-                                      "lisp"
-                                      (char-to-string directory-sep-char)
-                                      "ps-print") load-path))
-        (setq load-path (cons (concat packagehome "eieio")    load-path))
-        (setq load-path (cons (concat packagehome "elib")     load-path))
-        (setq load-path (cons (concat packagehome "semantic") load-path))
-        (setq load-path (cons (concat packagehome "speedbar") load-path))
-        (setq load-path (cons (concat packagehome "cc-mode")  load-path))
-        (setq load-path (cons (concat packagehome "cedet")    load-path))
-        )
-    )
-  ;; For Emacs < v22.3 supply my patch files
-  (if (and (= emacs-major-version 22)
-             (< emacs-minor-version 3))
-      ;; Use an updated pcvs from Emacs CVS repository.
-      (setq load-path (cons (concat packagehome "pcvs") load-path))
-    )
-
-  )
-
+  (setq load-path (cons "/home/.../groovy-emacs-mode" load-path))
+  (setq load-path (cons "/home/.../markdown-mode" load-path))
+  (setq load-path (cons "/home/.../dockerfile-mode" load-path))
 
 ; Example theme installation
 ;  (add-to-list 'custom-theme-load-path "/home/..../emacs-color-theme-solarized")
 ;  (add-to-list 'custom-theme-load-path "/home/..../zenburn-emacs")
-
+  )
 
 (setq load-path (cons (concat rnc_emacs_home "General") load-path))
 
@@ -117,7 +94,7 @@
 ;;
 ;; Example printer setup:
 ;; (setq-default pr-ps-printer-alist '((HPPrinter "lpr" nil "-P" "HP_Printer")))
-;; (setq-default ps-postscript-code-directory "/usr/share/emacs/23.3/etc")
+;; (setq-default ps-postscript-code-directory "/usr/share/emacs/26.1/etc")
 ;; Set the printer name e.g.
 ;; (setq-default pr-ps-name 'HPPrinter)
 ;; (pr-update-menus t)

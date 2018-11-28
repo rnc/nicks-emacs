@@ -1,1 +1,0 @@
-/home/rnc/Work/Miscellaneous/yaml-mode/yaml-mode.el

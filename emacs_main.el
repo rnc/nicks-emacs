@@ -222,6 +222,8 @@ Same as (system-name) up to the first '.'"
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
+;; Formatting for linum-mode
+(setq-default linum-format "%d ")
 
 ;;
 ;;*****************;;
@@ -567,10 +569,13 @@ With argument, do this that many times."
 ;; MODES       ;;
 ;;*************;;
 
+;; GO Mode
+(autoload 'go-mode "go-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
 
 ;; Docker
 (require 'dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+;; (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 ;; Speedbar
 (require 'sr-speedbar)
@@ -590,9 +595,18 @@ With argument, do this that many times."
 
 ;; Markdown
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files." t)
-(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+(autoload 'gfm-mode "markdown-mode"
+   "Major mode for editing GitHub Flavored Markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+
 (eval-after-load "markdown-mode"
   '(progn
+     ;; Flymd provides live preview within the default web browser.
+     (require 'flymd)
+     (message "Run flymd-flyit to preview markdown file in browser")
      (define-key markdown-mode-map (kbd "M-<up>") 'page-down-one)
      (define-key markdown-mode-map (kbd "M-<down>") 'page-up-one)
      ))
@@ -647,11 +661,6 @@ With argument, do this that many times."
 ;; Diff Mode
 (autoload 'diff-mode "diff-mode" "Diff major mode" t)
 (add-to-list 'auto-mode-alist '("\\.\\(diffs?\\|patch\\|rej\\)\\'" . diff-mode))
-
-;; Fill Adapt mode
-(require 'filladapt)
-(setq-default filladapt-mode-line-string "")
-(add-hook 'text-mode-hook 'turn-on-filladapt-mode)
 
 ;; HideShow Mode
 (require 'hideshow)
@@ -946,7 +955,6 @@ With argument, do this that many times."
          (git-setup-diff-buffer
           (apply #'git-run-command-buffer "*git-diff*" "diff-index" "-w" "-p" "-M" "HEAD" "--" (git-get-filenames files)))))
      ))
-(autoload 'git-blame-mode "git-blame" "Minor mode for incremental blame for Git." t)
 
 ;; Subversion
 (autoload 'svn-status "psvn" "PSVN Mode" 't)
