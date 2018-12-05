@@ -943,18 +943,18 @@ With argument, do this that many times."
      ))
 
 ;; GIT
-(autoload 'git-status "git" "GIT Mode" 't)
-(eval-after-load "git"
-  '(progn
-     (define-key git-status-mode-map "="   'my-git-diff-file)
-     (define-key git-status-mode-map "\M-="   'git-diff-file)
-     (defun my-git-diff-file ()
-       "Diff the marked file(s) against HEAD *ignoring* whitespace."
-       (interactive)
-       (let ((files (git-marked-files)))
-         (git-setup-diff-buffer
-          (apply #'git-run-command-buffer "*git-diff*" "diff-index" "-w" "-p" "-M" "HEAD" "--" (git-get-filenames files)))))
-     ))
+;; (autoload 'git-status "git" "GIT Mode" 't)
+;; (eval-after-load "git"
+;;   '(progn
+;;      (define-key git-status-mode-map "="   'my-git-diff-file)
+;;      (define-key git-status-mode-map "\M-="   'git-diff-file)
+;;      (defun my-git-diff-file ()
+;;        "Diff the marked file(s) against HEAD *ignoring* whitespace."
+;;        (interactive)
+;;        (let ((files (git-marked-files)))
+;;          (git-setup-diff-buffer
+;;           (apply #'git-run-command-buffer "*git-diff*" "diff-index" "-w" "-p" "-M" "HEAD" "--" (git-get-filenames files)))))
+;;      ))
 
 ;; Subversion
 (autoload 'svn-status "psvn" "PSVN Mode" 't)
