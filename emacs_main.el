@@ -103,7 +103,7 @@
       (global-unset-key "\C-x\C-q")     ; Was toggle-read-only
       (global-unset-key "\C-x\C-z")     ; Was suspend-frame (iconify)
       (global-unset-key "\C-z")         ; Was suspend-frame (iconify)
-      (global-set-key (kbd "C-x C-c") 'toggle-read-only) ; Was save-buffers-kill-emacs
+      (global-set-key (kbd "C-x C-c") 'read-only-mode) ; Was save-buffers-kill-emacs
       (global-set-key (kbd "C-x C-q") 'save-buffers-kill-emacs) ; Was vc-toggle-read-only
       ))
 
@@ -574,8 +574,8 @@ With argument, do this that many times."
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
 
 ;; Docker
-(require 'dockerfile-mode)
-;; (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(autoload 'dockerfile-mode "dockerfile-mode")
+(add-to-list 'auto-mode-alist '("Dockerfile\\(?:\\..*\\)?\\'" . dockerfile-mode))
 
 ;; Speedbar
 (require 'sr-speedbar)
