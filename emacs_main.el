@@ -569,6 +569,17 @@ With argument, do this that many times."
 ;; MODES       ;;
 ;;*************;;
 
+;; RPM Spec Files
+(autoload 'rpm-spec-mode "rpm-spec-mode" "RPM spec mode." t)
+(setq auto-mode-alist (append '(("\\.spec" . rpm-spec-mode)) auto-mode-alist))
+
+;; Load filladapt
+(require 'filladapt)
+
+;; JSON Mode
+(autoload 'json-mode "json-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
 ;; GO Mode
 (autoload 'go-mode "go-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
