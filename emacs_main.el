@@ -1112,8 +1112,8 @@ for the --graph option."
             (setq hcz-set-cursor-color-buffer (buffer-name)))))
       (add-hook 'post-command-hook 'hcz-set-cursor-color-according-to-mode)
 
-      (set-face-italic-p 'font-lock-comment-face t)
-      (set-face-bold-p 'font-lock-keyword-face t)
+      (set-face-italic 'font-lock-comment-face t)
+      (set-face-bold 'font-lock-keyword-face t)
       (set-face-underline 'font-lock-constant-face t)
 
       (set-face-foreground 'paren-face-match "Dim Gray")
@@ -1335,7 +1335,7 @@ for the --graph option."
           (switch-to-buffer "Extension Help")
           (insert-file-contents (concat rnc_emacs_home "Documentation/ExtensionHelp"))
           (set-buffer-modified-p 'nil)
-          (toggle-read-only t)
+          (read-only-mode t)
           )
       )
     )
