@@ -225,6 +225,8 @@ Same as (system-name) up to the first '.'"
 ;; Formatting for linum-mode
 (setq-default linum-format "%d ")
 
+(setq-default bidi-display-reordering 'nil)
+
 ;;
 ;;*****************;;
 ;;                 ;;
@@ -569,6 +571,10 @@ With argument, do this that many times."
 ;; MODES       ;;
 ;;*************;;
 
+;; QML Mode
+(autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
+(add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
+
 ;; RPM Spec Files
 (autoload 'rpm-spec-mode "rpm-spec-mode" "RPM spec mode." t)
 (setq auto-mode-alist (append '(("\\.spec" . rpm-spec-mode)) auto-mode-alist))
@@ -588,13 +594,10 @@ With argument, do this that many times."
 (autoload 'dockerfile-mode "dockerfile-mode")
 (add-to-list 'auto-mode-alist '("Dockerfile\\(?:\\..*\\)?\\'" . dockerfile-mode))
 
-;; Speedbar
-(require 'sr-speedbar)
-(global-set-key [f8] 'sr-speedbar-toggle)
-(global-set-key (kbd "M-<f8>") 'sr-speedbar-refresh-toggle)
-(setq-default sr-speedbar-right-side 'nil)
-(setq-default sr-speedbar-width 20)
-(setq-default speedbar-show-unknown-files t)
+;; Kotlin
+(autoload 'kotlin-mode "kotlin-mode" "Major mode for editing Kotlin files." t)
+(add-to-list 'auto-mode-alist '("\\.kts\\'" . kotlin-mode))
+(setq-default kotlin-tab-width 4)
 
 ;; Yaml
 (autoload 'yaml-mode "yaml-mode" "Major mode for editing Yaml files." t)
@@ -615,11 +618,7 @@ With argument, do this that many times."
 
 (eval-after-load "markdown-mode"
   '(progn
-     ;; Flymd provides live preview within the default web browser.
-     (require 'flymd)
-     (message "Run flymd-flyit to preview markdown file in browser")
-     (define-key markdown-mode-map (kbd "M-<up>") 'page-down-one)
-     (define-key markdown-mode-map (kbd "M-<down>") 'page-up-one)
+     (require 'markdown-toc)
      ))
 
 ;; AWK
@@ -628,6 +627,7 @@ With argument, do this that many times."
 ;;; use groovy-mode when file ends in .groovy or has #!/bin/groovy at start
 (autoload 'groovy-mode "groovy-mode" "Major mode for editing Groovy code." t)
 (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode))
 
 ;; make Groovy mode electric by default.

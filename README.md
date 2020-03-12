@@ -13,6 +13,11 @@ Install via yum/dnf:
 + emacs-color-theme
 + emacs-common
 + emacs-goodies
++ emacs-json-mode
++ emacs-json-reformat
++ emacs-json-snatcher
++ emacs-rpm-spec-mode
++ emacs-yaml-mode
 
 *(If these are not installed then their RPM contents must be installed manually and added to the load-path)*
 
