@@ -184,7 +184,7 @@ Same as (system-name) up to the first '.'"
 ;; Avoid visiting the same file in two buffers under different names.
 (setq-default find-file-existing-other-name t)
 ;; Fill column for text modes (use fci-mode).
-(setq-default fill-column 80)
+(setq-default fill-column 100)
 (require 'fill-column-indicator)
 (setq-default fci-handle-truncate-lines 'nil)
 (setq-default fci-rule-color "dark orange")
@@ -198,7 +198,7 @@ Same as (system-name) up to the first '.'"
 ;; Get rid of bell
 ;; Could set visible-bell variable to true but has horrible side-effects on
 ;; minibuffer. Therefore just use this to remove it.
-(setq ring-bell-function '(lambda () nil))
+(setq-default ring-bell-function '(lambda () nil))
 ;; Mouse-wheel scroll window mouse is over
 (setq-default mouse-wheel-follow-mouse t)
 
@@ -227,6 +227,8 @@ Same as (system-name) up to the first '.'"
 
 (setq-default bidi-display-reordering 'nil)
 
+(setq-default require-final-newline t)
+
 ;;
 ;;*****************;;
 ;;                 ;;
@@ -239,6 +241,27 @@ Same as (system-name) up to the first '.'"
 ;;*************;;
 ;; SCREEN      ;;
 ;;*************;;
+
+
+
+(require 'all-the-icons)
+(require 'find-file-in-project)
+(require 'neotree)
+(setq-default neo-smart-open t)
+(setq-default neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (defun neotree-project-dir ()
+    "Open NeoTree using the git root."
+    (interactive)
+    (let ((project-dir (ffip-project-root))
+          (file-name (buffer-file-name)))
+      (if project-dir
+          (progn
+            (neotree-dir project-dir)
+            (neotree-find file-name))
+        (message "Could not find git project root."))))
+
+(global-set-key [f8] 'neotree-project-dir)
+;; (global-set-key [f8] 'neotree-toggle)
 
 (define-globalized-minor-mode
   global-text-scale-mode
@@ -571,6 +594,19 @@ With argument, do this that many times."
 ;; MODES       ;;
 ;;*************;;
 
+(require 'tty-format)
+
+;; M-x display-ansi-colors to explicitly decode ANSI color escape sequences
+(defun display-ansi-colors ()
+  (interactive)
+  (format-decode-buffer 'ansi-colors))
+
+;; decode ANSI color escape sequences for *.txt or README files
+;; (add-hook 'find-file-hooks 'tty-format-guess)
+
+;; decode ANSI color escape sequences for .log files
+(add-to-list 'auto-mode-alist '("\\.log\\'" . display-ansi-colors))
+
 ;; QML Mode
 (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
 (add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
@@ -615,6 +651,7 @@ With argument, do this that many times."
 (autoload 'gfm-mode "markdown-mode"
    "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+(setq-default markdown-command "multimarkdown")
 
 (eval-after-load "markdown-mode"
   '(progn
@@ -718,6 +755,7 @@ With argument, do this that many times."
 (add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
 (add-hook 'python-mode-hook 'hs-minor-mode)
 (add-hook 'sh-mode-hook 'hs-minor-mode)
+(add-hook 'groovy-mode-hook 'hs-minor-mode)
 
 (add-to-list 'hs-special-modes-alist
              '(conf-unix-mode
@@ -874,59 +912,6 @@ With argument, do this that many times."
 (global-set-key (kbd "C-x C-<pause>") 'kill-cvsignore-buffers)
 (global-set-key (kbd "M-<pause>") 'kill-changelog-buffers)
 
-
-(if (not (boundp 'rnc_disable_ecb_load))
-    (progn
-      (x-popup-dialog t '("Unknown config variable rnc_disable_ecb_load. Upgrade .emacs file" ("Ok" . nil)))
-      (setq-default rnc_disable_ecb_load (symbol-value 'nil))
-    )
-  )
-(if (and (> emacs-major-version 22)
-         (not (symbol-value 'rnc_disable_ecb_load)))
-    (progn
-      ;; Cedet
-      (require 'cedet)
-      (if (>= emacs-major-version 23)
-          (semantic-mode 1)
-        (if (fboundp 'semantic-load-enable-minimum-features)
-            (semantic-load-enable-minimum-features)
-          )
-        )
-      ;; ECB
-      (require 'ecb)
-;;      (setq-default ecb-activate-hook nil)
-      (setq-default ecb-layout-name "left10")
-      (setq-default ecb-minor-mode-text "")
-      (setq-default ecb-tip-of-the-day nil)
-      (setq-default ecb-history-sort-method 'nil)
-      (setq-default ecb-vc-enable-support t)
-      (setq-default ecb-tree-buffer-style 'image)
-
-;;      (setq-default ecb-token-display-function '((default . ecb-uml-concise-prototype-nonterminal)))
-
-      (setq-default ecb-show-tags '((default (include collapsed nil) (parent collapsed nil) (type flattened nil) (variable collapsed access) (function flattened access) (label hidden nil) (t collapsed nil)) (c++-mode (include collapsed nil) (parent collapsed nil) (type flattened nil) (variable collapsed access) (function flattened access) (function collapsed access) (label hidden nil) (t collapsed nil)) (c-mode (include collapsed nil) (parent collapsed nil) (type flattened nil) (variable collapsed access) (function flattened access) (function collapsed access) (label hidden nil) (t collapsed nil)) (bovine-grammar-mode (keyword collapsed name) (token collapsed name) (nonterminal flattened name) (rule flattened name) (t collapsed nil)) (wisent-grammar-mode (keyword collapsed name) (token collapsed name) (nonterminal flattened name) (rule flattened name) (t collapsed nil)) (texinfo-mode (section flattened nil) (def collapsed name) (t collapsed nil)) (java-mode (include collapsed nil) (parent collapsed nil) (type flattened nil) (variable collapsed access) (function flattened name) (label collapsed nil) (t collapsed nil))))
-
-       (setq-default ecb-advice-window-functions '(other-window delete-window delete-other-windows delete-windows-on split-window-horizontally split-window-vertically split-window switch-to-buffer switch-to-buffer-other-window other-window-for-scrolling))
-
-       (setq-default ecb-token-visit-post-actions '((default ecb-token-visit-smart-token-start ecb-token-visit-highlight-token-header) (java-mode ecb-token-visit-goto-doc-start ecb-token-visit-recenter-top) ))
-
-      ;; (setq-default ecb-methods-general-face 'ecb-methods-general-face)
-      ;; (setq-default ecb-history-general-face 'ecb-history-general-face)
-      ;; (setq-default ecb-sources-general-face 'ecb-sources-general-face)
-
-      (if (> emacs-major-version 20)
-          (progn
-            (set-face-attribute 'ecb-default-general-face 'nil :height 0.9)
-            ;; (set-face-attribute 'ecb-methods-general-face 'nil :family "helvetica"    :height 0.7)
-            ;; (set-face-attribute 'ecb-history-general-face 'nil :family "trebuchet ms" :height 1.0 :foreground "gray20")
-            ;; (set-face-attribute 'ecb-sources-general-face 'nil :family "trebuchet ms" :height 1.0 :foreground "gray20")
-            ;; (set-face-attribute 'ecb-directories-general-face 'nil :family "trebuchet ms" :height 1.0 :foreground "gray20")
-             ))
-
-      (setq-default global-semantic-stickyfunc-mode nil)
-      (setq-default global-senator-minor-mode nil)
-      )
-  )
 
 
 ;; PMD
