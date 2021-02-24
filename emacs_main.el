@@ -247,21 +247,21 @@ Same as (system-name) up to the first '.'"
 (require 'all-the-icons)
 (require 'find-file-in-project)
 (require 'neotree)
+(setq-default neo-window-width 30)
 (setq-default neo-smart-open t)
 (setq-default neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (defun neotree-project-dir ()
-    "Open NeoTree using the git root."
-    (interactive)
-    (let ((project-dir (ffip-project-root))
-          (file-name (buffer-file-name)))
-      (if project-dir
-          (progn
-            (neotree-dir project-dir)
-            (neotree-find file-name))
-        (message "Could not find git project root."))))
-
+(defun neotree-project-dir ()
+  "Open NeoTree using the git root."
+  (interactive)
+  (let ((project-dir (ffip-project-root))
+        (file-name (buffer-file-name)))
+    (if project-dir
+        (progn
+          (neotree-dir project-dir)
+          (neotree-find file-name))
+      (message "Could not find git project root."))))
 (global-set-key [f8] 'neotree-project-dir)
-;; (global-set-key [f8] 'neotree-toggle)
+(global-set-key (kbd "<S-f8>") 'neotree-toggle)
 
 (define-globalized-minor-mode
   global-text-scale-mode
@@ -672,6 +672,17 @@ With argument, do this that many times."
           '(lambda ()
              (require 'groovy-electric)
              (groovy-electric-mode)))
+
+;; Web Mode
+(autoload 'web-mode "web-mode" "WebMode" t)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jinja\\'" . web-mode))
 
 ;; HTML Mode
 (autoload 'html-helper-mode "html-helper-mode" "Yay HTML" t)
