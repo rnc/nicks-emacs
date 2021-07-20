@@ -83,13 +83,7 @@
 (setq-default auto-image-file-mode 't)
 
 ;; Using my own printing menu so get rid of the ones off File
-(define-key global-map [menu-bar files print-buffer] nil)
-(define-key global-map [menu-bar files print-region] nil)
-(define-key global-map [menu-bar files ps-print-buffer-faces] nil)
-(define-key global-map [menu-bar files ps-print-region] nil)
-(define-key global-map [menu-bar files separator-print] nil)
-(define-key global-map [menu-bar files ps-print-buffer] nil)
-(define-key global-map [menu-bar files ps-print-region-faces] nil)
+(define-key global-map [menu-bar file print] nil)
 
 
 ;; Use C-h w to locate keybinding
